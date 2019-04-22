@@ -1,0 +1,19 @@
+<!doctype html>
+
+<head> 
+    <link rel="stylesheet" href="{{ static_url }}">
+</head>
+<title>Hello from Flask</title>
+<div class="wrapper">
+  <div class="box a">A</div>
+  <div class="box b">B</div>
+  <div class="box c">C</div>
+  <div class="box d">D</div>
+  <div class="box e">E</div>
+  <div class="box f">F</div>
+</div>
+{% if name %}
+  <h1>Hello {{ name }}!</h1>
+{% else %}
+  <h1>Hello, World!</h1>
+{% endif %}
