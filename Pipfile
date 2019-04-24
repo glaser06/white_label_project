@@ -6,6 +6,12 @@ name = "pypi"
 [dev-packages]
 
 [packages]
+marshmallow = "*"
+pymongo = "*"
+flask-cors = "*"
+flask = "*"
+flask-wtf = "*"
+flask-login = "*"
 
 [requires]
 python_version = "3.7"
