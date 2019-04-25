@@ -1,5 +1,9 @@
 runtime: python37
 
+env_variables:
+  CLOUD_STORAGE_BUCKET: "random-python-static-bucket"
+  SERVER_NAME: "random-python.appspot.com"
+
 handlers:
   # This configures Google App Engine to serve the files in the app's static
   # directory.

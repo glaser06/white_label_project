@@ -25,8 +25,7 @@ from werkzeug.urls import url_parse
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'big_secret'
-app.config['SERVER_NAME'] = 'random-python.appspot.com'
-# app.config['SERVER_NAME'] = 'example.com:5000'
+app.config['SERVER_NAME'] = os.getenv('SERVER_NAME', 'example.com:5000') 
 login = LoginManager(app)
 login.login_view = 'login'
 
@@ -115,6 +114,7 @@ def profile(name):
     if template.main_css_url == 'local':
         return render_template('profile.html', static_url=url_for('static', filename=template.name+'/css/main.css'), posts=posts)
     elif template.main_css_url != "":
+        print(template.main_css_url)
         return render_template('profile.html', static_url=template.main_css_url, posts=posts)
     else:
         return render_template('profile.html', static_url=url_for('static', filename='default/css/main.css'))

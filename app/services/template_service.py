@@ -104,7 +104,8 @@ class TemplateService(object):
         bucket = gcs.get_bucket(CLOUD_STORAGE_BUCKET)
 
         # Create a new blob and upload the file's content.
-        blob = bucket.blob(uploaded_file.filename)
+        filename = str(uuid.uuid4())+uploaded_file.filename
+        blob = bucket.blob(filename)
 
         blob.upload_from_string(
             uploaded_file.read(),
