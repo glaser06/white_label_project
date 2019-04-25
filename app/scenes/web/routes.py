@@ -8,7 +8,7 @@ sys.path.append('../')
 # from flask import Flask, json, g, request
 
 # from app.entities.schema import PostSchema
-from flask_cors import CORS
+
 
 import os
 from flask import Flask, url_for, Blueprint
@@ -25,10 +25,10 @@ from werkzeug.urls import url_parse
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'big_secret'
-app.config['SERVER_NAME'] = 'example.com:5000'
+app.config['SERVER_NAME'] = 'random-python.appspot.com'
 login = LoginManager(app)
 login.login_view = 'login'
-CORS(app)
+
 user_service = UserService()
 post_service = PostService()
 template_service = TemplateService()
