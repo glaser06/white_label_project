@@ -48,9 +48,18 @@ class PostSchema(Schema):
   def make_post(self, data):
     return Post(**data)
 
+class Template(object): 
+  def __init__(self, name, main_css_url, logo_img_url, id=''):
+    self.id = id
+    self.name = name 
+    self.main_css_url = main_css_url
+    self.logo_img_url = logo_img_url
+
 class TemplateSchema(Schema):
   id = fields.Str(required=True)
   name = fields.Str()
   main_css_url = fields.Str()
   logo_img_url = fields.Str()
-
+  @post_load
+  def make_template(self, data):
+    return Template(**data)

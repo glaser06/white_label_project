@@ -12,6 +12,7 @@ flask-cors = "*"
 flask = "*"
 flask-wtf = "*"
 flask-login = "*"
+google-cloud-firestore = "*"
 
 [requires]
 python_version = "3.7"

@@ -17,7 +17,7 @@ class UserStore(MongoStore):
 
   def find(self, selector):
     return self.db.users.find_one(selector)
-    
+
   def create(self, user):
    return self.db.users.insert_one(user)
   
@@ -32,4 +32,16 @@ class PostStore(MongoStore):
 
   def find(self, selector):
    return self.db.posts.find_one(selector)
+
+
+class TemplateStore(MongoStore): 
+
+  def find_all(self, selector):
+    return self.db.templates.find(selector)
+
+  def create(self, post):
+   return self.db.templates.insert_one(post)
+
+  def find(self, selector):
+   return self.db.templates.find_one(selector)
 
