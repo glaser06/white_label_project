@@ -25,8 +25,8 @@ from werkzeug.urls import url_parse
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'big_secret'
-# app.config['SERVER_NAME'] = 'random-python.appspot.com'
-app.config['SERVER_NAME'] = 'example.com:5000'
+app.config['SERVER_NAME'] = 'random-python.appspot.com'
+# app.config['SERVER_NAME'] = 'example.com:5000'
 login = LoginManager(app)
 login.login_view = 'login'
 
