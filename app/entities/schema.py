@@ -50,7 +50,7 @@ class PostSchema(Schema):
     return Post(**data)
 
 class Template(object): 
-  def __init__(self, name, main_css_url, logo_img_url='', id=''):
+  def __init__(self, name, main_css_url='', logo_img_url='', id=''):
     self.id = id
     self.name = name 
     self.main_css_url = main_css_url

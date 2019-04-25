@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "982a803e18535e1c6704db146e826d4f3fae5e957d9d7b0f16f57312ad8c74cd"
+            "sha256": "c2424b92d07d1f89d9b06fcf1f8f8d3376bcaff62b9f97c10f9305e963cb5407"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -122,6 +122,22 @@
             ],
             "index": "pypi",
             "version": "==0.32.1"
+        },
+        "google-cloud-storage": {
+            "hashes": [
+                "sha256:0e02039f37d3e4531090f72d1200ad78316625503644864f81c1d6b91516bfa7",
+                "sha256:d66bfed1fd51f392ee361b5b7d84efd912f47db52a28722ee2e3994f0a54698d"
+            ],
+            "index": "pypi",
+            "version": "==1.15.0"
+        },
+        "google-resumable-media": {
+            "hashes": [
+                "sha256:2dae98ee716efe799db3578a7b902fbf5592fc5c77d3c0906fc4ef9b1b930861",
+                "sha256:3e38923493ca0d7de0ad91c31acfefc393c78586db89364e91cb4f11990e51ba"
+            ],
+            "markers": "python_version != '3.0.*' and python_version != '3.1.*' and python_version >= '2.6'",
+            "version": "==0.3.2"
         },
         "googleapis-common-protos": {
             "hashes": [

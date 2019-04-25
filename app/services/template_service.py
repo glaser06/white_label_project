@@ -1,4 +1,5 @@
 import os.path
+import os
 import sys
 import time
 
@@ -6,9 +7,12 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.
 from . import DataStore
 
 from .firestore import UserStore, PostStore, TemplateStore
+from google.cloud import storage
 from app.entities.schema import TemplateSchema, User, Template
 
 import uuid
+
+CLOUD_STORAGE_BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 
 class TemplateService(object):
     def __init__(self, repo_client=DataStore(adapter=TemplateStore)):
@@ -74,11 +78,38 @@ class TemplateService(object):
 
 
 
-    def create_template(self, template_data):
+    def create_template(self, template_data, file):
         template = TemplateSchema().load(template_data).data
         print(template)
         template.id = uuid.uuid4()
+        file_url = self.upload_file(file)
+        if file_url is not None:
+            template.main_css_url = file_url
+        else: 
+            return None
         result = TemplateSchema().dump(template)
 
         self.repo_client.create(result.data)
         return result.data
+
+    def upload_file(self, uploaded_file):
+
+        if not uploaded_file:
+            return None
+
+        # Create a Cloud Storage client.
+        gcs = storage.Client()
+
+        # Get the bucket that the file will be uploaded to.
+        bucket = gcs.get_bucket(CLOUD_STORAGE_BUCKET)
+
+        # Create a new blob and upload the file's content.
+        blob = bucket.blob(uploaded_file.filename)
+
+        blob.upload_from_string(
+            uploaded_file.read(),
+            content_type=uploaded_file.content_type
+        )
+
+        # The public URL can be used to directly access the uploaded file via HTTP.
+        return blob.public_url

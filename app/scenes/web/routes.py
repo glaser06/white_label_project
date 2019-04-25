@@ -25,7 +25,8 @@ from werkzeug.urls import url_parse
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'big_secret'
-app.config['SERVER_NAME'] = 'random-python.appspot.com'
+# app.config['SERVER_NAME'] = 'random-python.appspot.com'
+app.config['SERVER_NAME'] = 'example.com:5000'
 login = LoginManager(app)
 login.login_view = 'login'
 
@@ -131,7 +132,20 @@ def create_post():
         post_service.create_post_for(current_user, post_data)
         return redirect("http://"+current_user.username+'.'+app.config['SERVER_NAME'])
     return render_template('create_post.html', title='Create Post', form=form)
-        
+    
+@app.route('/template/create', methods=['GET','POST'])
+@login_required
+def create_template(): 
+    form = TemplateForm()
+    if form.validate_on_submit():
+        template_data = {
+            'name': form.name.data,
+        }
+        uploaded_file = form.css_file.data
+        template_service.create_template(template_data, uploaded_file)
+        return redirect("http://"+current_user.username+'.'+app.config['SERVER_NAME'])
+    return render_template('create_template.html', title='Create Template', form=form)
+           
 @app.route('/hello/')
 @app.route('/hello/<name>')
 def hello(name=None):

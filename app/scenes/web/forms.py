@@ -17,6 +17,7 @@ class PostForm(FlaskForm):
 class TemplateForm(FlaskForm):
     name = StringField('Template Name')
     css_file = FileField()
+    submit = SubmitField('Submit Template')
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
