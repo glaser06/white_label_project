@@ -18,6 +18,7 @@ from flask_login import LoginManager
 from flask_login import current_user, login_user, logout_user, login_required
 from app.services.user_services import UserService
 from app.services.post_service import PostService
+from app.services.template_service import TemplateService
 from app.entities.schema import UserSchema, PostSchema
 from flask import request
 from werkzeug.urls import url_parse
@@ -30,6 +31,7 @@ login.login_view = 'login'
 CORS(app)
 user_service = UserService()
 post_service = PostService()
+template_service = TemplateService()
 
 # app = Blueprint('web_server', __name__, template_folder='templates')
 
@@ -96,7 +98,7 @@ def register():
             'email': form.email.data,
         }
         
-        user_service.create_user_for(user_data, form.password.data)
+        user_service.create_user_for(user_data, form.password.data, form.template.data)
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
@@ -104,13 +106,18 @@ def register():
 @app.route('/', subdomain="<name>")
 @login_required
 def profile(name): 
-    if name in ["white", "green", "random"] : 
-        raw_posts = post_service.find_posts_by_user(current_user)
-        posts = [PostSchema(exclude=['id','user_id']).dump(post).data for post in raw_posts]
-        print(raw_posts)
-        return render_template('profile.html', static_url=url_for('static', filename=name+'/css/main.css'), posts=posts)
-    return render_template('index.html', static_url=url_for('static', filename='default/css/main.css'))
-    return "Hello" + name + "!!"
+    template = template_service.find_templates_for_user(current_user)
+    raw_posts = post_service.find_posts_by_user(current_user)
+    posts = [PostSchema(exclude=['id','user_id']).dump(post).data for post in raw_posts]
+
+    print(raw_posts)
+    if template.main_css_url == 'local':
+        return render_template('profile.html', static_url=url_for('static', filename=template.name+'/css/main.css'), posts=posts)
+    elif template.main_css_url != "":
+        return render_template('profile.html', static_url=template.main_css_url, posts=posts)
+    else:
+        return render_template('profile.html', static_url=url_for('static', filename='default/css/main.css'))
+
 
 @app.route('/post/create', methods=['GET','POST'])
 @login_required
@@ -118,7 +125,7 @@ def create_post():
     form = PostForm()
     if form.validate_on_submit():
         post_data = {
-            'name': form.body.data,
+            'name': form.name.data,
             'body': form.body.data,
         }
         post_service.create_post_for(current_user, post_data)

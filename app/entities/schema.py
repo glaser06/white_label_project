@@ -4,11 +4,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
 class User(UserMixin, object): 
-  def __init__(self, username, email, id='', password_hash=''):
+  def __init__(self, username, email, template_id='', id='', password_hash=''):
     self.username = username
     self.email = email 
     self.id = id
     self.password_hash = password_hash
+    self.template_id = template_id
 
   def set_password(self, password):
     self.password_hash = generate_password_hash(password)
@@ -49,14 +50,14 @@ class PostSchema(Schema):
     return Post(**data)
 
 class Template(object): 
-  def __init__(self, name, main_css_url, logo_img_url, id=''):
+  def __init__(self, name, main_css_url, logo_img_url='', id=''):
     self.id = id
     self.name = name 
     self.main_css_url = main_css_url
     self.logo_img_url = logo_img_url
 
 class TemplateSchema(Schema):
-  id = fields.Str(required=True)
+  id = fields.Str()
   name = fields.Str()
   main_css_url = fields.Str()
   logo_img_url = fields.Str()

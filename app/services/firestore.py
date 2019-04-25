@@ -4,16 +4,7 @@ class CloudStore(object):
     def __init__(self):
         self.client = firestore.Client()
 
-class UserStore(CloudStore): 
-    def __init__(self):
-        super().__init__()
-        self.db = self.client.collection('users')
-
-
     def find_all(self, selector):
-        return self.db.get()
-
-    def find(self, selector):
         queries = [] 
         for key in selector:
             queries.append([key, '==', selector[key]])
@@ -24,8 +15,26 @@ class UserStore(CloudStore):
             if big_query is None :
                 big_query = self.db.where(*query)
             big_query = big_query.where(*query)
+        if big_query is None:
+            big_query = self.db
+        results = big_query.get()
+        json = [user.to_dict() for user in results]
+        if len(json) == 0:
+            return None
+        return json
+    def find(self, selector):
+        result = self.find_all(selector)
+        if result is None: 
+            return None
+        return result[0]
 
-        return big_query.get()
+class UserStore(CloudStore): 
+    def __init__(self):
+        super().__init__()
+        self.db = self.client.collection('users')
+
+
+    
 
     def create(self, user):
         # self.db.document(user['id']).set(user)
@@ -33,25 +42,25 @@ class UserStore(CloudStore):
 
 
 class PostStore(CloudStore): 
-
-    def find_all(self, selector):
-        return self.db.posts.find(selector)
+    def __init__(self):
+        super().__init__()
+        self.db = self.client.collection('posts')
 
     def create(self, post):
-        return self.db.posts.insert_one(post)
+        return self.db.document(post['id']).set(post)
 
-    def find(self, selector):
-        return self.db.posts.find_one(selector)
+    # 
+   
 
 
 class TemplateStore(CloudStore): 
 
-    def find_all(self, selector):
-        return self.db.templates.find(selector)
+    def __init__(self):
+        super().__init__()
+        self.db = self.client.collection('templates')
 
-    def create(self, post):
-        return self.db.templates.insert_one(post)
+    def create(self, template):
+        return self.db.document(template['id']).set(template)
 
-    def find(self, selector):
-        return self.db.templates.find_one(selector)
+
 

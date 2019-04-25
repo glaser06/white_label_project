@@ -5,7 +5,7 @@ import time
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 from . import DataStore
 
-from .mongo import UserStore, PostStore
+from .firestore import UserStore, PostStore
 from app.entities.schema import Post, PostSchema, User
 
 import uuid
@@ -19,6 +19,8 @@ class PostService(object):
 
     def find_all_posts(self):
         posts  = self.repo_client.find_all({})
+        if posts is None: 
+            return []
         print(posts)
         return [PostSchema().load(post).data for post in posts]
 
@@ -34,7 +36,7 @@ class PostService(object):
         json = self.repo_client.find_all({'user_id': user.id})
         print(json)
         if json is None: 
-            return None
+            return []
         posts = [PostSchema().load(post).data for post in json]
         print(posts)
         return posts
