@@ -1,3 +1,4 @@
 .DS_Store
 *.pyc
 firestore-secret-key.json
+.vscode

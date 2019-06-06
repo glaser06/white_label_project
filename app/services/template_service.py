@@ -1,18 +1,19 @@
+import uuid
+from app.entities.schema import TemplateSchema, User, Template
+from google.cloud import storage
+from .firestore import UserStore, PostStore, TemplateStore
+from . import DataStore
 import os.path
 import os
 import sys
 import time
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
-from . import DataStore
+sys.path.append(os.path.abspath(os.path.join(
+    os.path.dirname(__file__), os.path.pardir)))
 
-from .firestore import UserStore, PostStore, TemplateStore
-from google.cloud import storage
-from app.entities.schema import TemplateSchema, User, Template
-
-import uuid
 
 CLOUD_STORAGE_BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
+
 
 class TemplateService(object):
     def __init__(self, repo_client=DataStore(adapter=TemplateStore)):
@@ -20,39 +21,39 @@ class TemplateService(object):
         self.add_default_templates()
 
     def add_default_templates(self):
-        if len(self.find_all_templates()) == 0 :
+        if len(self.find_all_templates()) == 0:
             print('here')
             default_template = {
-                'name': 'default', 
+                'name': 'default',
                 'main_css_url': 'local'
             }
             white_template = {
-                'name': 'white', 
+                'name': 'white',
                 'main_css_url': 'local'
             }
             green_template = {
-                'name': 'green', 
+                'name': 'green',
                 'main_css_url': 'local'
             }
             another_template = {
-                'name': 'random', 
+                'name': 'random',
                 'main_css_url': 'local'
             }
             for template in [default_template, white_template, green_template, another_template]:
                 self.create_template(template)
 
-    def default_template(self): 
+    def default_template(self):
         return self.find_template_by_name('default')
 
     def find_all_templates(self):
-        templates  = self.repo_client.find_all({})
-        if templates is None: 
+        templates = self.repo_client.find_all({})
+        if templates is None:
             return []
         return [TemplateSchema().load(template).data for template in templates]
 
     def find_template(self, template_id):
         json = self.repo_client.find({'id': template_id})
-        if json is None: 
+        if json is None:
             return None
         template = TemplateSchema().load(json).data
         return template
@@ -60,7 +61,7 @@ class TemplateService(object):
     def find_template_by_name(self, name):
         json = self.repo_client.find({'name': name})
         print(json)
-        if json is None: 
+        if json is None:
             return None
         template = TemplateSchema().load(json).data
         print(template)
@@ -70,13 +71,11 @@ class TemplateService(object):
 
         json = self.repo_client.find({'id': user.template_id})
         print(json)
-        if json is None: 
+        if json is None:
             return None
         templates = TemplateSchema().load(json).data
         print(templates)
         return templates
-
-
 
     def create_template(self, template_data, file):
         template = TemplateSchema().load(template_data).data
@@ -85,7 +84,7 @@ class TemplateService(object):
         file_url = self.upload_file(file)
         if file_url is not None:
             template.main_css_url = file_url
-        else: 
+        else:
             return None
         result = TemplateSchema().dump(template)
 

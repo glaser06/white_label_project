@@ -1,4 +1,5 @@
 {
-    "python.pythonPath": "/Users/zaizenkaegyoshi/.local/share/virtualenvs/white_label_project-jwJ1tHOW/bin/python",
-    "python.linting.enabled": true
+    "python.pythonPath": "/Users/ZaizenK/.local/share/virtualenvs/white_label_project-OQ_IiQ3F/bin/python",
+    "python.linting.enabled": true,
+    "python.linting.pylintEnabled": true
 }
